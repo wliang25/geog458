@@ -1,0 +1,113 @@
+---
+title: "Getting Started with R"
+author: "Wendy Liang"
+date: "January 16, 2019"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+library(tibble)
+knitr::opts_chunk$set(echo = TRUE)
+
+```
+
+#GEOG458
+
+##Advanced Digital Geographies
+
+###Phil Neel
+
+This is _wliang25_'s first assignment for **Geog458**. Our course page can be accessed [here](https://canvas.uw.edu/courses/1269928).
+
+This is where I study:
+
+![](https://s3-us-west-2.amazonaws.com/uw-s3-cdn/wp-content/uploads/sites/98/2014/09/07214435/Signature_Stacked_Purple_Hex.png)
+
+
+This is the quadratic function: 
+\[ x=\frac{-b\pm\sqrt{b^2-4ac}}{2a}\]
+
+
+|Column 1|Column 2|Column 3|
+|--------|--------|--------|
+|1|2|3|
+|1|2|3|
+|1|2|3|
+
+
+```{r, echo=TRUE, include=FALSE}
+#Task 6
+summary(cars$dist)
+summary(cars$speed)
+
+100 / 10 + 2
+100 / (10 + 2)
+
+25 + 5 * 0
+(25 + 5) * 0
+25 + (5 * 0)
+
+#Task 7
+x <- 8 * 3
+x + 10
+
+y <- 5 * 3
+x + y
+
+z <- 10 - 25
+y + x + z
+z * x + y
+
+#Task 8
+num = seq(1, 30)
+strings = c("one", "two", "three")
+
+numlength = length(num)
+stringslength = length(strings)
+
+numsum = sum(num)
+#stringssum = sum(strings)
+
+#Task 9
+num2 <- seq(1, 5)
+num3 <- seq(6, 10)
+num2 + num3
+num4 <- num2 * num3
+
+#Task 10
+tenv <- c(num2, num3)
+tenm <- rbind(num2, num3, (num2 * num3))
+tendf <- data.frame(tenm)
+```
+
+##Loading the Data
+
+this is how to load data into R and how to convert it
+
+``` {r, echo=TRUE}
+library("tidyverse")
+obj1 <- read.csv("China_EO_49to17.csv")
+obj2 <- as_tibble(obj1)
+
+#Task 14
+library(dplyr)
+obj2 <- arrange(obj2, desc(Year))
+shbjdf <- obj2 %>% filter(Year >= 2000) %>% select("Year", contains("Shanghai"), contains("Beijing")) %>% print()
+
+shbjdfratio <- shbjdf %>% mutate(Output_Ratio = Beijing_Output/Shanghai_Output) %>% print()
+
+#Task 15
+provinces_ratio <- function(p1, p2) {
+  df <- obj1 %>% filter(Year >= 2000) %>% select("Year", contains(p1), contains(p2)) %>% arrange(desc(Year))
+  new_col <- if(ncol(df) > 3) {
+    df[[3]]/df[[5]]
+  } else {
+    df[[2]]/df[[3]]
+  }
+  df <- df %>% mutate(Output_Ratio = new_col)
+}
+
+test <- provinces_ratio("Shanghai", "Beijing")
+test2 <- provinces_ratio("Shanghai_Output", "Beijing_Output")
+
+```
